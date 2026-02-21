@@ -59,8 +59,8 @@ async function main() {
     console.log("Starting one-click generation...");
     await runOneClickGeneration({
       projectId,
-      episodeCount: EPISODE_COUNT ? parseInt(EPISODE_COUNT, 10) : 1,
-      duration: DURATION ? parseInt(DURATION, 10) : 120,
+      episodeCount: EPISODE_COUNT ? parseInt(EPISODE_COUNT, 10) : undefined,
+      duration: DURATION ? parseInt(DURATION, 10) : undefined,
       aiConfigId: AI_CONFIG_ID ? parseInt(AI_CONFIG_ID, 10) : undefined,
     });
 

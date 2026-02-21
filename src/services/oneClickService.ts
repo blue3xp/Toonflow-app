@@ -25,12 +25,14 @@ const getPathname = (url: string): string => {
 export async function runOneClickGeneration({
   projectId,
   chapterRange,
-  episodeCount = 1,
-  duration = 120,
+  episodeCount,
+  duration,
   aiConfigId,
 }: OneClickParams) {
   try {
     console.log(`[一键生成] 开始处理项目 ${projectId}`);
+
+    const effectiveDuration = duration || 120; // 默认120秒
 
     // 1. 初始化 OutlineScript
     const outlineAgent = new OutlineScript(projectId);
@@ -50,8 +52,13 @@ export async function runOneClickGeneration({
     await outlineAgent.call(`分析${rangeText}生成故事线`);
 
     // 3. 生成大纲
-    console.log(`[一键生成] 生成大纲 (${episodeCount}集, 每集${duration}秒)`);
-    await outlineAgent.call(`确认故事线，生成大纲，共${episodeCount}集，每集时长${duration}秒`);
+    if (episodeCount && duration) {
+      console.log(`[一键生成] 生成大纲 (${episodeCount}集, 每集${duration}秒)`);
+      await outlineAgent.call(`确认故事线，生成大纲，共${episodeCount}集，每集时长${duration}秒`);
+    } else {
+      console.log(`[一键生成] 生成大纲 (AI自动规划，限制每集<=120秒)`);
+      await outlineAgent.call(`确认故事线，生成大纲，请自动规划合理的集数和每集时长（要求每集时长不超过120秒）`);
+    }
 
     // 4. 生成资产
     console.log(`[一键生成] 生成资产`);
@@ -168,7 +175,7 @@ export async function runOneClickGeneration({
                   mode: "multi", // 4-grid is likely multi
                   images: JSON.stringify(shot.cells.map((c, i) => ({ id: i, filePath: c.src, prompt: c.prompt }))),
                   resolution: "1024x1024", // Default?
-                  duration: 5, // Default 5s per shot?
+                  duration: Math.round(effectiveDuration / shots.length) || 5, // 估算分镜时长
                   prompt: shot.cells.map((c) => c.prompt).join("\n"),
                   createTime: now,
                   updateTime: now,
@@ -187,7 +194,7 @@ export async function runOneClickGeneration({
                   id: newVideoId,
                   scriptId: scriptRec.id,
                   configId: newConfigId,
-                  time: 5,
+                  time: Math.round(effectiveDuration / shots.length) || 5,
                   resolution: "1024x1024",
                   prompt: shot.cells.map((c) => c.prompt).join("\n"),
                   firstFrame: storyboardImgs[0],
@@ -202,7 +209,7 @@ export async function runOneClickGeneration({
                   filePaths,
                   savePath,
                   shot.cells.map((c) => c.prompt).join("\n"),
-                  5,
+                  Math.round(effectiveDuration / shots.length) || 5,
                   "1024x1024",
                   false,
                   aiConfig,
