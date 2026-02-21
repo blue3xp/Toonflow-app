@@ -31,7 +31,8 @@
     "docker:build": "docker-compose -f docker/docker-compose.yml up -d --build",
     "docker:local": "docker-compose -f docker/docker-compose.local.yml up -d --build",
     "debug:ai": "npx @ai-sdk/devtools",
-    "license": "bun run scripts/license.ts"
+    "license": "bun run scripts/license.ts",
+    "one-click": "cross-env NODE_ENV=prod tsx scripts/oneClickGen.ts"
   },
   "dependencies": {
     "@ai-sdk/anthropic": "^3.0.35",
