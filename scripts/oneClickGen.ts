@@ -10,7 +10,6 @@ async function main() {
     ART_STYLE,
     VIDEO_RATIO,
     NOVEL_IDEA,
-    NOVEL_FILE_PATH,
     EPISODE_COUNT,
     DURATION,
     AI_CONFIG_ID,
@@ -20,22 +19,13 @@ async function main() {
     console.error("Missing PROJECT_NAME");
     process.exit(1);
   }
-  let novelContent = "";
-  if (NOVEL_FILE_PATH) {
-    const novelPath = path.resolve(process.cwd(), NOVEL_FILE_PATH);
-    if (!fs.existsSync(novelPath)) {
-      console.error(`Novel file not found at ${novelPath}`);
-      process.exit(1);
-    }
-    console.log(`Reading novel from ${novelPath}...`);
-    novelContent = fs.readFileSync(novelPath, "utf-8");
-  } else if (NOVEL_IDEA) {
-    console.log("Using NOVEL_IDEA as content...");
-    novelContent = NOVEL_IDEA;
-  } else {
-    console.error("Missing NOVEL_FILE_PATH or NOVEL_IDEA");
+  if (!NOVEL_IDEA) {
+    console.error("Missing NOVEL_IDEA");
     process.exit(1);
   }
+
+  console.log("Using NOVEL_IDEA as content...");
+  const novelContent = NOVEL_IDEA;
 
   try {
     // 1. Create Project
@@ -59,7 +49,7 @@ async function main() {
       projectId,
       chapterIndex: 1,
       reel: "正文",
-      chapter: NOVEL_FILE_PATH ? "全文" : "创意概述",
+      chapter: "创意概述",
       chapterData: novelContent,
       createTime: Date.now(),
     });
