@@ -70,7 +70,7 @@ async function main() {
     await runOneClickGeneration({
       projectId,
       episodeCount: EPISODE_COUNT ? parseInt(EPISODE_COUNT, 10) : 1,
-      duration: DURATION ? parseInt(DURATION, 10) : 30,
+      duration: DURATION ? parseInt(DURATION, 10) : 120,
       aiConfigId: AI_CONFIG_ID ? parseInt(AI_CONFIG_ID, 10) : undefined,
     });
 

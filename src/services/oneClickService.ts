@@ -26,7 +26,7 @@ export async function runOneClickGeneration({
   projectId,
   chapterRange,
   episodeCount = 1,
-  duration = 30,
+  duration = 120,
   aiConfigId,
 }: OneClickParams) {
   try {

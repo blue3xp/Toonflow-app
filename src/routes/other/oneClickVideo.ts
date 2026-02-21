@@ -13,7 +13,7 @@ export default router.post(
     projectId: z.number(),
     chapterRange: z.array(z.number()).optional(),
     episodeCount: z.number().optional().default(1),
-    duration: z.number().optional().default(30), // 默认30秒
+    duration: z.number().optional().default(120), // 默认120秒
     aiConfigId: z.number().optional(), // 视频生成使用的模型配置ID
   }),
   async (req, res) => {
