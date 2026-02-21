@@ -20,14 +20,20 @@ async function main() {
     console.error("Missing PROJECT_NAME");
     process.exit(1);
   }
-  if (!NOVEL_FILE_PATH) {
-    console.error("Missing NOVEL_FILE_PATH");
-    process.exit(1);
-  }
-
-  const novelPath = path.resolve(process.cwd(), NOVEL_FILE_PATH);
-  if (!fs.existsSync(novelPath)) {
-    console.error(`Novel file not found at ${novelPath}`);
+  let novelContent = "";
+  if (NOVEL_FILE_PATH) {
+    const novelPath = path.resolve(process.cwd(), NOVEL_FILE_PATH);
+    if (!fs.existsSync(novelPath)) {
+      console.error(`Novel file not found at ${novelPath}`);
+      process.exit(1);
+    }
+    console.log(`Reading novel from ${novelPath}...`);
+    novelContent = fs.readFileSync(novelPath, "utf-8");
+  } else if (NOVEL_IDEA) {
+    console.log("Using NOVEL_IDEA as content...");
+    novelContent = NOVEL_IDEA;
+  } else {
+    console.error("Missing NOVEL_FILE_PATH or NOVEL_IDEA");
     process.exit(1);
   }
 
@@ -48,13 +54,12 @@ async function main() {
     console.log(`Project created with ID: ${projectId}`);
 
     // 2. Import Novel
-    console.log(`Importing novel from ${novelPath}...`);
-    const novelContent = fs.readFileSync(novelPath, "utf-8");
+    console.log(`Importing novel content...`);
     await u.db("t_novel").insert({
       projectId,
       chapterIndex: 1,
       reel: "正文",
-      chapter: "全文",
+      chapter: NOVEL_FILE_PATH ? "全文" : "创意概述",
       chapterData: novelContent,
       createTime: Date.now(),
     });
