@@ -509,6 +509,19 @@ ${sections.join("\n\n")}
     return this.shots;
   }
 
+  /**
+   * 等待所有正在生成的分镜图完成
+   */
+  public async waitForAllGenerations(timeoutMs = 600000): Promise<void> {
+    const start = Date.now();
+    while (this.generatingShots.size > 0) {
+      if (Date.now() - start > timeoutMs) {
+        throw new Error("分镜图生成超时");
+      }
+      await new Promise((resolve) => setTimeout(resolve, 1000));
+    }
+  }
+
   // ==================== 上下文构建 ====================
 
   private async buildEnvironmentContext(): Promise<string> {

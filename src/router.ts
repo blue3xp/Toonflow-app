@@ -78,6 +78,7 @@ import route74 from "./routes/video/getVideoStoryboards";
 import route75 from "./routes/video/reviseVideoStoryboards";
 import route76 from "./routes/video/saveVideo";
 import route77 from "./routes/video/upDateVideoConfig";
+import route78 from "./routes/other/oneClickVideo";
 
 export default async (app: Express) => {
   app.use("/assets/addAssets", route1);
@@ -157,4 +158,5 @@ export default async (app: Express) => {
   app.use("/video/reviseVideoStoryboards", route75);
   app.use("/video/saveVideo", route76);
   app.use("/video/upDateVideoConfig", route77);
+  app.use("/other/oneClickVideo", route78);
 }
